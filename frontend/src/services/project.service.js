@@ -1,3 +1,5 @@
+import { authenticatedFetch } from './api.js'
+
 // Fetch all projects from the backend API.
 // Returns the parsed JSON (an array of projects), or throws if the request fails.
 export async function getProjects() {
@@ -13,7 +15,7 @@ export async function getProjects() {
 // Create a new project through the backend API.
 // Returns the created project, or throws if the request fails.
 export async function createProject(projectData) {
-  const response = await fetch('http://localhost:5000/api/projects', {
+  const response = await authenticatedFetch('http://localhost:5000/api/projects', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(projectData),
@@ -29,7 +31,7 @@ export async function createProject(projectData) {
 // Update an existing project through the backend API.
 // Returns the updated project, or throws if the request fails.
 export async function updateProject(id, projectData) {
-  const response = await fetch(`http://localhost:5000/api/projects/${id}`, {
+  const response = await authenticatedFetch(`http://localhost:5000/api/projects/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(projectData),
@@ -45,7 +47,7 @@ export async function updateProject(id, projectData) {
 // Delete a project through the backend API.
 // Returns the deleted project, or throws if the request fails.
 export async function deleteProject(id) {
-  const response = await fetch(`http://localhost:5000/api/projects/${id}`, {
+  const response = await authenticatedFetch(`http://localhost:5000/api/projects/${id}`, {
     method: 'DELETE',
   })
 

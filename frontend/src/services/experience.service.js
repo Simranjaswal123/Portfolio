@@ -1,3 +1,5 @@
+import { authenticatedFetch } from './api.js'
+
 // This service fetches experience data from the backend API.
 // Returns the parsed JSON (an array of experience entries), or throws if the request fails.
 export async function getExperience() {
@@ -13,7 +15,7 @@ export async function getExperience() {
 // Create a new experience entry through the backend API.
 // Returns the created entry, or throws if the request fails.
 export async function createExperience(experienceData) {
-  const response = await fetch('http://localhost:5000/api/experience', {
+  const response = await authenticatedFetch('http://localhost:5000/api/experience', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(experienceData),
@@ -29,7 +31,7 @@ export async function createExperience(experienceData) {
 // Update an existing experience entry through the backend API.
 // Returns the updated entry, or throws if the request fails.
 export async function updateExperience(id, experienceData) {
-  const response = await fetch(`http://localhost:5000/api/experience/${id}`, {
+  const response = await authenticatedFetch(`http://localhost:5000/api/experience/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(experienceData),
@@ -45,7 +47,7 @@ export async function updateExperience(id, experienceData) {
 // Delete an experience entry through the backend API.
 // Returns the deleted entry, or throws if the request fails.
 export async function deleteExperience(id) {
-  const response = await fetch(`http://localhost:5000/api/experience/${id}`, {
+  const response = await authenticatedFetch(`http://localhost:5000/api/experience/${id}`, {
     method: 'DELETE',
   })
 
