@@ -5,6 +5,7 @@ import Skills from './components/Skills.jsx'
 import Experience from './components/Experience.jsx'
 import Education from './components/Education.jsx'
 import Contact from './components/Contact.jsx'
+import Footer from './components/Footer.jsx'
 import Home from './pages/Home.jsx'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <Experience />
       <Education />
       <Contact />
+      <Footer />
     </>
   )
 }
