@@ -15,6 +15,22 @@ import supabase from '../config/supabase.js'
 // What req.user contains:
 //   After a successful check, req.user is the Supabase user object (for example
 //   req.user.id and req.user.email), so later code knows who is making the request.
+//
+// IMPORTANT - this is AUTHENTICATION, not AUTHORIZATION:
+//   It proves that the caller is *a* signed-in Supabase user. It does not prove the
+//   caller is *the admin*. This project has one admin and no roles table, so today
+//   every signed-in user would be let through.
+//   TODO (before more than one account can exist, e.g. if Supabase sign-ups are
+//   enabled): check that req.user is the admin here, for example by comparing
+//   req.user.email (or req.user.id) with a value from an environment variable, and
+//   return 403 otherwise. Until then, keep public sign-ups DISABLED in the Supabase
+//   dashboard (Authentication > Sign In / Providers).
+//
+// Security notes:
+//   - The token is verified with the server-side client (secret key), never with the
+//     publishable key.
+//   - Neither the token nor Supabase's error details are ever sent to the client or
+//     written to the logs.
 export async function requireAuth(req, res, next) {
   const authHeader = req.headers.authorization
 
@@ -29,15 +45,16 @@ export async function requireAuth(req, res, next) {
     // Asks Supabase Auth to verify the token and return the user it belongs to.
     const { data, error } = await supabase.auth.getUser(token)
 
-    if (error || !data.user) {
+    if (error || !data?.user) {
       return res.status(401).json({ error: 'Invalid or expired token' })
     }
 
     req.user = data.user
     next()
   } catch (err) {
-    // Log the real error on the server only; never send it to the client.
-    console.error('Token verification failed:', err)
+    // Log only the message (never the whole error object), with the token blanked out
+    // in case a library ever repeats it.
+    console.error('Token verification failed:', String(err.message).replaceAll(token, '[token]'))
     return res.status(401).json({ error: 'Invalid or expired token' })
   }
 }

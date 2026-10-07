@@ -6,12 +6,17 @@ import {
   deleteEducationController,
 } from '../controllers/education.controller.js'
 import { requireAuth } from '../middleware/auth.middleware.js'
+import { requireAdmin } from '../middleware/admin.middleware.js'
+import {
+  validateCreateEducation,
+  validateUpdateEducation,
+} from '../middleware/validation.middleware.js'
 
 const router = Router()
 
 router.get('/', getEducation)
-router.post('/', requireAuth, createEducationController)
-router.patch('/:id', requireAuth, updateEducationController)
-router.delete('/:id', requireAuth, deleteEducationController)
+router.post('/', requireAuth, requireAdmin, validateCreateEducation, createEducationController)
+router.patch('/:id', requireAuth, requireAdmin, validateUpdateEducation, updateEducationController)
+router.delete('/:id', requireAuth, requireAdmin, deleteEducationController)
 
 export default router

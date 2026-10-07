@@ -6,12 +6,17 @@ import {
   deleteProjectController,
 } from '../controllers/project.controller.js'
 import { requireAuth } from '../middleware/auth.middleware.js'
+import { requireAdmin } from '../middleware/admin.middleware.js'
+import {
+  validateCreateProject,
+  validateUpdateProject,
+} from '../middleware/validation.middleware.js'
 
 const router = Router()
 
 router.get('/', getProjects)
-router.post('/', requireAuth, createProjectController)
-router.patch('/:id', requireAuth, updateProjectController)
-router.delete('/:id', requireAuth, deleteProjectController)
+router.post('/', requireAuth, requireAdmin, validateCreateProject, createProjectController)
+router.patch('/:id', requireAuth, requireAdmin, validateUpdateProject, updateProjectController)
+router.delete('/:id', requireAuth, requireAdmin, deleteProjectController)
 
 export default router

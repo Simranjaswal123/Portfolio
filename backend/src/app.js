@@ -11,11 +11,30 @@ import profileRouter from './routes/profile.routes.js'
 // The app defines *what* the API does: middleware and routes.
 const app = express()
 
-// Allow only the React dev server to call this API from the browser.
-app.use(cors({ origin: 'http://localhost:5173' }))
+// Don't tell every visitor which framework we use, and stop browsers from guessing
+// content types.
+app.disable('x-powered-by')
+app.use((req, res, next) => {
+  res.set('X-Content-Type-Options', 'nosniff')
+  next()
+})
 
-// Parse JSON request bodies (req.body) for future POST/PUT routes.
-app.use(express.json())
+// Only the frontend is allowed to call this API from a browser.
+// Set FRONTEND_URL in backend/.env for another address (separate several with commas).
+// It defaults to the local development server. A wildcard (*) is refused on purpose.
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+
+if (allowedOrigins.includes('*')) {
+  throw new Error('FRONTEND_URL must list real origins, not "*".')
+}
+
+app.use(cors({ origin: allowedOrigins }))
+
+// Parse JSON request bodies (req.body). Anything bigger than 50kb is refused.
+app.use(express.json({ limit: '50kb' }))
 
 // All health-check routes live under /api/health.
 app.use('/api/health', healthRouter)
@@ -37,5 +56,27 @@ app.use('/api/contact', contactRouter)
 
 // Profile routes live under /api/profile.
 app.use('/api/profile', profileRouter)
+
+// Anything that matched no route above.
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' })
+})
+
+// Last-resort error handler. It keeps stack traces and file paths away from the client.
+// (The four parameters are required: that is how Express recognises an error handler.)
+app.use((err, req, res, next) => {
+  // Problems with the request itself, such as malformed JSON or a body that is too big.
+  if (err.status === 413) {
+    return res.status(413).json({ error: 'Request body too large' })
+  }
+
+  if (err.status >= 400 && err.status < 500) {
+    return res.status(400).json({ error: 'Invalid request data' })
+  }
+
+  // Anything else is our bug: log it here, tell the client nothing about it.
+  console.error('Unhandled error:', err)
+  res.status(500).json({ error: 'Internal server error' })
+})
 
 export default app
