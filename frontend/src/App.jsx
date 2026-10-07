@@ -3,6 +3,7 @@ import Hero from './components/Hero.jsx'
 import About from './components/About.jsx'
 import Skills from './components/Skills.jsx'
 import Experience from './components/Experience.jsx'
+import Education from './components/Education.jsx'
 import Home from './pages/Home.jsx'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Skills />
       <Home />
       <Experience />
+      <Education />
     </>
   )
 }
