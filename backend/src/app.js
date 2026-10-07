@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import healthRouter from './routes/health.js'
 import projectRouter from './routes/project.routes.js'
+import educationRouter from './routes/education.routes.js'
 
 // The app defines *what* the API does: middleware and routes.
 const app = express()
@@ -17,5 +18,8 @@ app.use('/api/health', healthRouter)
 
 // Project routes live under /api/projects.
 app.use('/api/projects', projectRouter)
+
+// Education routes live under /api/education.
+app.use('/api/education', educationRouter)
 
 export default app
