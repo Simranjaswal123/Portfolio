@@ -41,3 +41,17 @@ export async function updateProject(id, projectData) {
 
   return await response.json()
 }
+
+// Delete a project through the backend API.
+// Returns the deleted project, or throws if the request fails.
+export async function deleteProject(id) {
+  const response = await fetch(`http://localhost:5000/api/projects/${id}`, {
+    method: 'DELETE',
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete project (status ${response.status})`)
+  }
+
+  return await response.json()
+}
