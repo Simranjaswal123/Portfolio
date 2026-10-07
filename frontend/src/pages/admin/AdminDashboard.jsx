@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from '../../services/auth.service.js'
+import ProjectsSection from '../../components/admin/ProjectsSection.jsx'
 
 function AdminDashboard() {
   const navigate = useNavigate()
@@ -41,6 +42,8 @@ function AdminDashboard() {
           {errorMessage}
         </p>
       )}
+
+      <ProjectsSection />
     </main>
   )
 }
