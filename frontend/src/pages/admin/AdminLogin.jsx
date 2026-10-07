@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { signIn } from '../../services/auth.service.js'
 
 // Shared styles for the text fields, so each input stays short.
 const inputClasses =
@@ -7,11 +8,26 @@ const inputClasses =
 function AdminLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault() // stop the browser from reloading the page
 
-    // TODO: Supabase Auth will be connected later.
+    // Start fresh: hide any message from a previous attempt.
+    setSubmitting(true)
+    setErrorMessage(null)
+
+    try {
+      await signIn(email, password)
+      // TODO: go to the dashboard after a successful sign in (added later).
+    } catch (err) {
+      console.error(err)
+      // The email and password stay filled in, so the admin can try again.
+      setErrorMessage('Invalid email or password.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -63,11 +79,18 @@ function AdminLogin() {
             />
           </div>
 
+          {errorMessage && (
+            <p role="alert" className="text-sm font-medium text-red-600">
+              {errorMessage}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="w-full rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none"
+            disabled={submitting}
+            className="w-full rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Sign In
+            {submitting ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
       </div>
