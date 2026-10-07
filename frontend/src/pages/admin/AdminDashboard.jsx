@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from '../../services/auth.service.js'
+import ProjectForm from '../../components/admin/ProjectForm.jsx'
 import ProjectsSection from '../../components/admin/ProjectsSection.jsx'
 
 function AdminDashboard() {
@@ -43,6 +44,7 @@ function AdminDashboard() {
         </p>
       )}
 
+      <ProjectForm />
       <ProjectsSection />
     </main>
   )
