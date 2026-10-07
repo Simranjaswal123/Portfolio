@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createContactMessage } from '../services/contact.service.js'
 
 const emptyForm = {
   name: '',
@@ -14,6 +15,9 @@ const inputClasses =
 function Contact() {
   // All four form values live in one state object.
   const [formData, setFormData] = useState(emptyForm)
+  const [submitting, setSubmitting] = useState(false)
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   // Runs on every keystroke. The input's "name" tells us which field to update.
   function handleChange(event) {
@@ -21,14 +25,25 @@ function Contact() {
     setFormData({ ...formData, [name]: value })
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault() // stop the browser from reloading the page
 
-    // TODO: API integration will be added later.
-    // For now we only log the data and clear the form.
-    console.log('Contact form submitted:', formData)
+    // Start fresh: hide any message from a previous attempt.
+    setSubmitting(true)
+    setSuccessMessage(null)
+    setErrorMessage(null)
 
-    setFormData(emptyForm)
+    try {
+      await createContactMessage(formData)
+      setSuccessMessage("Thank you! Your message has been sent. I'll get back to you soon.")
+      setFormData(emptyForm) // clear the form only after a successful send
+    } catch (err) {
+      console.error(err)
+      // The form data is kept, so the visitor can try again without retyping.
+      setErrorMessage('Sorry, your message could not be sent. Please try again later.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -128,11 +143,24 @@ function Contact() {
               />
             </div>
 
+            {successMessage && (
+              <p role="status" className="text-sm font-medium text-green-700">
+                {successMessage}
+              </p>
+            )}
+
+            {errorMessage && (
+              <p role="alert" className="text-sm font-medium text-red-600">
+                {errorMessage}
+              </p>
+            )}
+
             <button
               type="submit"
-              className="w-full rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none"
+              disabled={submitting}
+              className="w-full rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Send Message
+              {submitting ? 'Sending...' : 'Send Message'}
             </button>
           </form>
         </div>
