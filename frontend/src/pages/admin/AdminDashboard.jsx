@@ -9,6 +9,7 @@ import ExperienceForm from '../../components/admin/ExperienceForm.jsx'
 import ExperienceSection from '../../components/admin/ExperienceSection.jsx'
 import EducationForm from '../../components/admin/EducationForm.jsx'
 import EducationSection from '../../components/admin/EducationSection.jsx'
+import ContactMessagesSection from '../../components/admin/ContactMessagesSection.jsx'
 
 function AdminDashboard() {
   const navigate = useNavigate()
@@ -89,6 +90,8 @@ function AdminDashboard() {
 
       <EducationForm onEducationCreated={handleEducationCreated} />
       <EducationSection refreshKey={educationRefreshKey} />
+
+      <ContactMessagesSection />
     </main>
   )
 }
