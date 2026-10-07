@@ -28,7 +28,8 @@ function parseTechnologies(text) {
 }
 
 // The "Add Project" form of the admin dashboard.
-function ProjectForm() {
+// "onProjectCreated" is called after a project is saved, so the parent can react.
+function ProjectForm({ onProjectCreated }) {
   const [formData, setFormData] = useState(emptyForm)
   const [submitting, setSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState(null)
@@ -69,6 +70,7 @@ function ProjectForm() {
       await createProject(projectData)
       setSuccessMessage('Project added successfully.')
       setFormData(emptyForm) // clear the form only after a successful save
+      onProjectCreated() // tell the parent, so it can refresh the project list
     } catch (err) {
       console.error(err)
       // The form data is kept, so the admin can fix it and try again.

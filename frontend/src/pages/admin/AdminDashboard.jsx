@@ -9,6 +9,13 @@ function AdminDashboard() {
   const [signingOut, setSigningOut] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  // Going up by one tells ProjectsSection to load the projects again.
+  const [projectsRefreshKey, setProjectsRefreshKey] = useState(0)
+
+  function handleProjectCreated() {
+    setProjectsRefreshKey(projectsRefreshKey + 1)
+  }
+
   async function handleSignOut() {
     setSigningOut(true)
     setErrorMessage(null)
@@ -44,8 +51,8 @@ function AdminDashboard() {
         </p>
       )}
 
-      <ProjectForm />
-      <ProjectsSection />
+      <ProjectForm onProjectCreated={handleProjectCreated} />
+      <ProjectsSection refreshKey={projectsRefreshKey} />
     </main>
   )
 }

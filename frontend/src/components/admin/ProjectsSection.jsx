@@ -2,17 +2,20 @@ import { useEffect, useState } from 'react'
 import { getProjects } from '../../services/project.service.js'
 
 // The Projects section of the admin dashboard: a simple read-only table.
-function ProjectsSection() {
+// The parent can ask for a reload by passing a new number as "refreshKey".
+function ProjectsSection({ refreshKey }) {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // Runs once, when the section first appears on the page.
+  // Runs when the section first appears, and again every time refreshKey changes.
+  // On a reload the old table stays visible until the new data arrives.
   useEffect(() => {
     async function loadProjects() {
       try {
         const data = await getProjects()
         setProjects(data)
+        setError(null)
       } catch (err) {
         console.error(err)
         setError('Could not load projects. Please try again later.')
@@ -22,7 +25,7 @@ function ProjectsSection() {
     }
 
     loadProjects()
-  }, [])
+  }, [refreshKey])
 
   let content
 
