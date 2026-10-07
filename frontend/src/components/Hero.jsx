@@ -65,6 +65,16 @@ function Hero() {
           >
             Contact Me
           </a>
+          {profile?.resume_url && (
+            <a
+              href={profile.resume_url}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg border border-gray-300 px-6 py-3 text-center font-medium text-gray-900 hover:bg-gray-100"
+            >
+              View Resume
+            </a>
+          )}
         </div>
       </div>
     </section>
