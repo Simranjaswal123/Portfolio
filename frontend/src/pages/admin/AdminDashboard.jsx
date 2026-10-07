@@ -7,6 +7,8 @@ import SkillForm from '../../components/admin/SkillForm.jsx'
 import SkillsSection from '../../components/admin/SkillsSection.jsx'
 import ExperienceForm from '../../components/admin/ExperienceForm.jsx'
 import ExperienceSection from '../../components/admin/ExperienceSection.jsx'
+import EducationForm from '../../components/admin/EducationForm.jsx'
+import EducationSection from '../../components/admin/EducationSection.jsx'
 
 function AdminDashboard() {
   const navigate = useNavigate()
@@ -32,6 +34,13 @@ function AdminDashboard() {
 
   function handleExperienceCreated() {
     setExperienceRefreshKey(experienceRefreshKey + 1)
+  }
+
+  // And for education: going up by one reloads EducationSection.
+  const [educationRefreshKey, setEducationRefreshKey] = useState(0)
+
+  function handleEducationCreated() {
+    setEducationRefreshKey(educationRefreshKey + 1)
   }
 
   async function handleSignOut() {
@@ -77,6 +86,9 @@ function AdminDashboard() {
 
       <ExperienceForm onExperienceCreated={handleExperienceCreated} />
       <ExperienceSection refreshKey={experienceRefreshKey} />
+
+      <EducationForm onEducationCreated={handleEducationCreated} />
+      <EducationSection refreshKey={educationRefreshKey} />
     </main>
   )
 }
