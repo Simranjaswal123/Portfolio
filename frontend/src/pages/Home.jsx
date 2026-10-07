@@ -24,23 +24,38 @@ function Home() {
     loadProjects()
   }, [])
 
+  // The section and heading always render, so the #projects link works
+  // even while loading. Only the content below the heading changes.
+  let content
+
   if (loading) {
-    return <p className="p-6 text-gray-600">Loading projects...</p>
-  }
-
-  if (error) {
-    return <p className="p-6 text-red-600">{error}</p>
-  }
-
-  return (
-    <main className="mx-auto max-w-3xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">Projects</h1>
-      <div className="space-y-4">
+    content = <p className="text-gray-600">Loading projects...</p>
+  } else if (error) {
+    content = <p className="text-red-600">{error}</p>
+  } else {
+    content = (
+      <div className="grid gap-6 md:grid-cols-2">
         {projects.map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}
       </div>
-    </main>
+    )
+  }
+
+  return (
+    <section id="projects" className="bg-gray-50">
+      <div className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+        <h2 className="text-center text-3xl font-bold text-gray-900 sm:text-left">
+          Featured Projects
+        </h2>
+        <p className="mt-3 text-center text-lg text-gray-600 sm:text-left">
+          A selection of projects I've built while learning and practicing
+          full-stack development.
+        </p>
+
+        <div className="mt-8">{content}</div>
+      </div>
+    </section>
   )
 }
 
