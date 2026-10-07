@@ -6,6 +6,7 @@ import educationRouter from './routes/education.routes.js'
 import experienceRouter from './routes/experience.routes.js'
 import skillsRouter from './routes/skills.routes.js'
 import contactRouter from './routes/contact.routes.js'
+import profileRouter from './routes/profile.routes.js'
 
 // The app defines *what* the API does: middleware and routes.
 const app = express()
@@ -33,5 +34,8 @@ app.use('/api/skills', skillsRouter)
 
 // Contact routes live under /api/contact.
 app.use('/api/contact', contactRouter)
+
+// Profile routes live under /api/profile.
+app.use('/api/profile', profileRouter)
 
 export default app
