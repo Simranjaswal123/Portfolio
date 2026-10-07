@@ -5,12 +5,13 @@ import {
   updateExperienceController,
   deleteExperienceController,
 } from '../controllers/experience.controller.js'
+import { requireAuth } from '../middleware/auth.middleware.js'
 
 const router = Router()
 
 router.get('/', getExperience)
-router.post('/', createExperienceController)
-router.patch('/:id', updateExperienceController)
-router.delete('/:id', deleteExperienceController)
+router.post('/', requireAuth, createExperienceController)
+router.patch('/:id', requireAuth, updateExperienceController)
+router.delete('/:id', requireAuth, deleteExperienceController)
 
 export default router
