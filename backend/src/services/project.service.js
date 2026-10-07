@@ -28,3 +28,20 @@ export async function createProject(projectData) {
 
   return data
 }
+
+// Update one project in public.projects, found by its id.
+// Returns the updated row, or throws if Supabase reports an error.
+export async function updateProject(id, projectData) {
+  const { data, error } = await supabase
+    .from('projects')
+    .update(projectData)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) {
+    throw error
+  }
+
+  return data
+}
