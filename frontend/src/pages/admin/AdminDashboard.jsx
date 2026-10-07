@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { signOut } from '../../services/auth.service.js'
 import ProjectForm from '../../components/admin/ProjectForm.jsx'
 import ProjectsSection from '../../components/admin/ProjectsSection.jsx'
+import SkillForm from '../../components/admin/SkillForm.jsx'
+import SkillsSection from '../../components/admin/SkillsSection.jsx'
 
 function AdminDashboard() {
   const navigate = useNavigate()
@@ -14,6 +16,13 @@ function AdminDashboard() {
 
   function handleProjectCreated() {
     setProjectsRefreshKey(projectsRefreshKey + 1)
+  }
+
+  // The same idea for skills: going up by one reloads SkillsSection.
+  const [skillsRefreshKey, setSkillsRefreshKey] = useState(0)
+
+  function handleSkillCreated() {
+    setSkillsRefreshKey(skillsRefreshKey + 1)
   }
 
   async function handleSignOut() {
@@ -53,6 +62,9 @@ function AdminDashboard() {
 
       <ProjectForm onProjectCreated={handleProjectCreated} />
       <ProjectsSection refreshKey={projectsRefreshKey} />
+
+      <SkillForm onSkillCreated={handleSkillCreated} />
+      <SkillsSection refreshKey={skillsRefreshKey} />
     </main>
   )
 }
