@@ -2,6 +2,7 @@ import {
   getAllProjects,
   createProject,
   updateProject,
+  deleteProject,
 } from '../services/project.service.js'
 
 // GET /api/projects
@@ -37,5 +38,17 @@ export async function updateProjectController(req, res) {
     // Log the real error on the server only; never send it to the client.
     console.error('Failed to update project:', error)
     res.status(500).json({ error: 'Failed to update project' })
+  }
+}
+
+// DELETE /api/projects/:id
+export async function deleteProjectController(req, res) {
+  try {
+    const project = await deleteProject(req.params.id)
+    res.status(200).json(project)
+  } catch (error) {
+    // Log the real error on the server only; never send it to the client.
+    console.error('Failed to delete project:', error)
+    res.status(500).json({ error: 'Failed to delete project' })
   }
 }

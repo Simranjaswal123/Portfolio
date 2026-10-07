@@ -45,3 +45,20 @@ export async function updateProject(id, projectData) {
 
   return data
 }
+
+// Delete one project from public.projects, found by its id.
+// Returns the deleted row, or throws if Supabase reports an error.
+export async function deleteProject(id) {
+  const { data, error } = await supabase
+    .from('projects')
+    .delete()
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) {
+    throw error
+  }
+
+  return data
+}
