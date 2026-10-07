@@ -16,3 +16,13 @@ export async function signIn(email, password) {
 
   return data
 }
+
+// Sign out the current user and clear the saved session from the browser.
+// Throws if Supabase reports an error.
+export async function signOut() {
+  const { error } = await supabase.auth.signOut()
+
+  if (error) {
+    throw error
+  }
+}
