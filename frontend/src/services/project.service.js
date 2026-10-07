@@ -25,3 +25,19 @@ export async function createProject(projectData) {
 
   return await response.json()
 }
+
+// Update an existing project through the backend API.
+// Returns the updated project, or throws if the request fails.
+export async function updateProject(id, projectData) {
+  const response = await fetch(`http://localhost:5000/api/projects/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(projectData),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to update project (status ${response.status})`)
+  }
+
+  return await response.json()
+}
