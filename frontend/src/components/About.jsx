@@ -1,4 +1,41 @@
+import { useEffect, useState } from 'react'
+import { getProfile } from '../services/profile.service.js'
+
 function About() {
+  const [profile, setProfile] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  // Runs once, when the component first appears on the page.
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const data = await getProfile()
+        setProfile(data)
+      } catch (err) {
+        console.error(err)
+        setError('Could not load profile. Please try again later.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProfile()
+  }, [])
+
+  // The section and heading always render, so the #about link works
+  // even while loading. Only the content below the heading changes.
+  let content
+
+  if (loading) {
+    content = <p>Loading...</p>
+  } else if (error) {
+    content = <p className="text-red-600">{error}</p>
+  } else {
+    // whitespace-pre-line keeps any line breaks typed into the bio.
+    content = <p className="whitespace-pre-line">{profile.bio}</p>
+  }
+
   return (
     <section id="about" className="bg-gray-50">
       <div className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
@@ -7,17 +44,7 @@ function About() {
         </h2>
 
         <div className="mx-auto mt-6 max-w-3xl space-y-4 text-lg text-gray-600 sm:mx-0">
-          <p>
-            I'm Simran, a B.Tech student and aspiring software and full-stack
-            developer. I enjoy turning ideas into working web applications and
-            understanding how each part of an application fits together, from
-            the user interface to the database.
-          </p>
-          <p>
-            I'm always learning modern technologies and building projects to
-            strengthen my skills. I'm looking for opportunities to grow as a
-            developer and to work on software that people actually use.
-          </p>
+          {content}
         </div>
       </div>
     </section>
