@@ -1,1 +1,261 @@
 @import "tailwindcss";
+
+/* ---------- Navbar and hero: dark editorial look ---------- */
+
+@theme {
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-ui: "Geist", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-label: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --color-night: #0b0b0e; /* near-black charcoal */
+  --color-night-2: #141419; /* a step lighter, for tonal variation */
+  --color-bone: #ece9e2; /* off-white text (16:1 on night) */
+  --color-ash: #9b9aa6; /* muted text (6.9:1 on night) */
+  --color-iris: #a899ff; /* violet for text and lines on dark (8:1) */
+  --color-iris-deep: #6f5df2; /* violet for fills */
+}
+
+/* A very fine film grain that keeps large dark areas from looking flat. */
+@utility grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* The hero portrait dissolves into the dark: along its top edge always (so the navbar stays
+   readable), and along its left edge when it sits beside the text on wide screens. */
+.photo-fade {
+  mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 90%, transparent 100%);
+}
+@media (min-width: 1024px) {
+  .photo-fade {
+    mask-image:
+      linear-gradient(to right, transparent 0, #000 42%),
+      linear-gradient(to bottom, transparent 0, #000 22%, #000 92%, transparent 100%);
+    mask-composite: intersect;
+  }
+}
+
+/* Skill tiles: the card tilts (angles set from JS), the logo stands off the glass with its
+   own soft shadow on the pane. At rest this is all still; motion is added below. */
+.skill-card {
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+}
+.skill-icon {
+  transform: translateZ(30px);
+}
+.skill-icon-shadow {
+  transform: translateZ(-22px) translateY(0.85rem) scale(0.9);
+}
+
+/* Education dossier: the sheet tilts (angles set from JS); the pages behind sit a
+   little further back, so they shift slightly against it. */
+.dossier-sheet {
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+}
+.dossier-back {
+  transform: translateZ(-14px);
+}
+.dossier-back-far {
+  transform: translateZ(-28px);
+}
+
+/* Links to #projects, #contact... stop below the fixed navbar. */
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* The hero's content settles in, one piece at a time. */
+  .rise {
+    animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--d, 0ms);
+  }
+
+  /* Content that eases into place when it first scrolls into view (the About section). */
+  .reveal {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition:
+      opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms),
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .skill-card,
+  .skill-icon,
+  .skill-icon-shadow {
+    transition:
+      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      translate 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+  /* Only for devices that can hover: a small lift, and the logo comes further forward. */
+  @media (hover: hover) {
+    .skill-tile:hover .skill-card {
+      translate: 0 -4px;
+    }
+    .skill-tile:hover .skill-icon {
+      transform: translateZ(46px);
+    }
+    .skill-tile:hover .skill-icon-shadow {
+      transform: translateZ(-22px) translateY(1.3rem) scale(0.84);
+    }
+  }
+
+  /* Project carousels: slides glide sideways and fade; the frame lifts a little on hover. */
+  .carousel-track {
+    transition: transform var(--slide-ms, 450ms) cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .carousel-slide {
+    transition: opacity var(--slide-ms, 450ms) ease;
+  }
+  .carousel-glass {
+    transition:
+      translate 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+  @media (hover: hover) {
+    .carousel-frame:hover .carousel-glass {
+      translate: 0 -4px;
+    }
+  }
+
+  /* The screenshot gallery eases in. */
+  .gallery-in[open] {
+    animation: gallery-in 0.25s ease-out;
+  }
+
+  /* As a project image scrolls into view it settles from a slight tilt (browsers with
+     scroll-driven animations only; elsewhere it simply fades in like everything else). */
+  @supports (animation-timeline: view()) {
+    .scroll-settle {
+      transform-origin: 50% 100%;
+      animation: settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 65%;
+    }
+  }
+
+  /* Experience: the huge chapter number drifts a little as its chapter passes through
+     the screen (scroll-driven, so it never runs on its own; still in older browsers). */
+  @supports (animation-timeline: view()) {
+    .spotlight-number {
+      animation: number-drift linear both;
+      animation-timeline: view();
+    }
+  }
+
+  /* Education: the opening label tightens its tracking as it appears, the rule draws
+     across, and the dossier comes into focus. */
+  .reveal:not(.is-visible) .track-in {
+    letter-spacing: 0.55em;
+  }
+  .track-in {
+    transition: letter-spacing 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.rule-draw {
+    opacity: 1;
+    transform: none;
+  }
+  .rule-draw .rule-line {
+    transform-origin: left;
+    transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms);
+  }
+  .rule-draw:not(.is-visible) .rule-line {
+    transform: scaleX(0);
+  }
+  .reveal.reveal-focus {
+    filter: blur(6px);
+    transform: translateY(1.5rem) scale(0.985);
+    transition:
+      opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms),
+      filter 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms);
+  }
+  .reveal.reveal-focus.is-visible {
+    filter: none;
+    transform: none;
+  }
+  .dossier-sheet {
+    transition:
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.3s ease;
+  }
+  /* Switching records: the new content slides in from the direction of travel. */
+  .dossier-in {
+    animation: dossier-in 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .details-panel {
+    transition:
+      grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.3s ease;
+  }
+
+  /* Contact: each headline line rises out of its own mask; the mail button eases
+     towards the pointer (offset set from JS). */
+  .reveal.line-mask {
+    opacity: 1;
+    transform: none;
+  }
+  .line-mask .line-inner {
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms);
+  }
+  .line-mask:not(.is-visible) .line-inner {
+    transform: translateY(105%);
+  }
+  .magnetic {
+    transition:
+      translate 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.3s ease;
+  }
+
+  /* The portrait eases towards the pointer (set from JS). */
+  .tilt-photo {
+    transition: translate 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes gallery-in {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: perspective(1200px) rotateX(7deg) translateY(1.75rem) scale(0.97);
+  }
+}
+
+@keyframes number-drift {
+  from {
+    transform: translateY(-6%);
+  }
+  to {
+    transform: translateY(10%);
+  }
+}
+
+@keyframes dossier-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--dir, 1) * 0.9rem));
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.1rem);
+  }
+}
