@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 // Each link points to a section on the same page via its id (e.g. #about).
 const links = [
   { label: 'About', href: '#about' },
@@ -24,6 +26,15 @@ function Navbar() {
               </a>
             </li>
           ))}
+          {/* A route of its own (not a section), so it uses React Router's Link. */}
+          <li>
+            <Link
+              to="/admin/login"
+              className="rounded border border-gray-300 px-2 py-0.5 hover:border-gray-500 hover:text-black"
+            >
+              Admin
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

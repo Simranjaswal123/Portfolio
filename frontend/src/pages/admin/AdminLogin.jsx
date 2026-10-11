@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { signIn } from '../../services/auth.service.js'
 
 // Shared styles for the text fields, so each input stays short.
@@ -10,6 +10,7 @@ function AdminLogin() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -35,6 +36,13 @@ function AdminLogin() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-12">
       <div className="w-full max-w-md">
+        <Link
+          to="/"
+          className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/30"
+        >
+          <span aria-hidden="true">←</span> Back to home
+        </Link>
+
         <h1 className="text-center text-3xl font-bold text-gray-900">
           Admin Login
         </h1>
@@ -69,16 +77,29 @@ function AdminLogin() {
             >
               Password
             </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              autoComplete="current-password"
-              className={inputClasses}
-            />
+            {/* The button sits inside the field; extra right padding keeps text clear of it. */}
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+                autoComplete="current-password"
+                className={`${inputClasses} pr-16`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((shown) => !shown)}
+                aria-pressed={showPassword}
+                aria-controls="password"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="absolute inset-y-0 right-0 mt-1 px-3 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none focus-visible:underline"
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
           </div>
 
           {errorMessage && (
