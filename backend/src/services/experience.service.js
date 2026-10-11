@@ -1,18 +1,13 @@
 import supabase from '../config/supabase.js'
+import { collectImageUrls, removeUnusedImages, selectWithImages } from './image.service.js'
 
 // This service handles database access for experience.
 // It knows nothing about HTTP; a controller decides how to respond.
 
-// Fetch every row (all columns) from public.experience.
-// Returns the rows, or throws if Supabase reports an error.
+// Fetch every row (all columns) from public.experience, each with its photos
+// in an `images` list. Returns the rows, or throws if Supabase reports an error.
 export async function getAllExperience() {
-  const { data, error } = await supabase.from('experience').select('*')
-
-  if (error) {
-    throw error
-  }
-
-  return data
+  return selectWithImages('experience', 'experience_images')
 }
 
 // Insert one experience entry into public.experience.
@@ -51,6 +46,9 @@ export async function updateExperience(id, experienceData) {
 // Delete one experience entry from public.experience, found by its id.
 // Returns the deleted row, or throws if Supabase reports an error.
 export async function deleteExperience(id) {
+  // Remember the entry's photos first: deleting the entry also removes their rows.
+  const imageUrls = await collectImageUrls('experience', id)
+
   const { data, error } = await supabase
     .from('experience')
     .delete()
@@ -62,5 +60,6 @@ export async function deleteExperience(id) {
     throw error
   }
 
+  await removeUnusedImages(imageUrls) // then delete the files, now that nothing uses them
   return data
 }

@@ -1,16 +1,12 @@
 import supabase from '../config/supabase.js'
+import { collectImageUrls, removeUnusedImages, selectWithImages } from './image.service.js'
 
-// Fetch every row (all columns) from public.projects.
+// Fetch every row (all columns) from public.projects, each with its screenshots
+// in an `images` list (the cover is still `image_url`).
 // Returns the rows, or throws if Supabase reports an error.
 // The service knows nothing about HTTP; the controller handles the response.
 export async function getAllProjects() {
-  const { data, error } = await supabase.from('projects').select('*')
-
-  if (error) {
-    throw error
-  }
-
-  return data
+  return selectWithImages('projects', 'project_images')
 }
 
 // Insert one project into public.projects.
@@ -49,6 +45,9 @@ export async function updateProject(id, projectData) {
 // Delete one project from public.projects, found by its id.
 // Returns the deleted row, or throws if Supabase reports an error.
 export async function deleteProject(id) {
+  // Remember the project's images first: deleting the project also removes its gallery rows.
+  const imageUrls = await collectImageUrls('project', id)
+
   const { data, error } = await supabase
     .from('projects')
     .delete()
@@ -60,5 +59,6 @@ export async function deleteProject(id) {
     throw error
   }
 
+  await removeUnusedImages(imageUrls) // then delete the files, now that nothing uses them
   return data
 }

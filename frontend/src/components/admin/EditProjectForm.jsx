@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { updateProject } from '../../services/project.service.js'
+import ProjectImagesPanel from './images/ProjectImagesPanel.jsx'
 
 // Shared styles for the text fields, so each input stays short.
 const inputClasses =
@@ -27,14 +28,13 @@ function projectToFormData(project) {
     technologies: (project.technologies ?? []).join(', '),
     github_url: project.github_url ?? '',
     live_url: project.live_url ?? '',
-    image_url: project.image_url ?? '',
     featured: Boolean(project.featured),
   }
 }
 
 // The "Edit Project" form. It opens already filled in with the project's values.
 // "onUpdated" is called after a successful save; "onCancel" closes the form.
-function EditProjectForm({ project, onUpdated, onCancel }) {
+function EditProjectForm({ project, onUpdated, onCancel, onImagesChanged }) {
   const [formData, setFormData] = useState(projectToFormData(project))
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -61,7 +61,9 @@ function EditProjectForm({ project, onUpdated, onCancel }) {
       featured: formData.featured,
     }
 
-    const optionalFields = ['long_description', 'github_url', 'live_url', 'image_url']
+    // The images are not part of this form: they are saved on their own (see the Images
+    // panel below), so Save Changes can never overwrite them with an old value.
+    const optionalFields = ['long_description', 'github_url', 'live_url']
     optionalFields.forEach((field) => {
       const value = formData[field].trim()
       projectData[field] = value === '' ? null : value
@@ -189,20 +191,6 @@ function EditProjectForm({ project, onUpdated, onCancel }) {
         />
       </div>
 
-      <div>
-        <label htmlFor="edit-image_url" className={labelClasses}>
-          Image URL (optional)
-        </label>
-        <input
-          id="edit-image_url"
-          name="image_url"
-          type="url"
-          value={formData.image_url}
-          onChange={handleChange}
-          className={inputClasses}
-        />
-      </div>
-
       <div className="flex items-center gap-2">
         <input
           id="edit-featured"
@@ -216,6 +204,8 @@ function EditProjectForm({ project, onUpdated, onCancel }) {
           Featured project
         </label>
       </div>
+
+      <ProjectImagesPanel project={project} onChanged={onImagesChanged} />
 
       {errorMessage && (
         <p role="alert" className="text-sm font-medium text-red-600">

@@ -164,6 +164,7 @@ function ProjectsSection({ refreshKey }) {
             key={editingProject.id}
             project={editingProject}
             onUpdated={handleUpdated}
+            onImagesChanged={loadProjects}
             onCancel={() => setEditingProject(null)}
           />
         </div>

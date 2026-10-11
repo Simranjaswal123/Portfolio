@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { updateExperience } from '../../services/experience.service.js'
+import ExperienceImagesPanel from './images/ExperienceImagesPanel.jsx'
 
 // Shared styles for the text fields, so each input stays short.
 const inputClasses =
@@ -27,7 +28,7 @@ function experienceToFormData(experience) {
 
 // The "Edit Experience" form. It opens already filled in with the entry's values.
 // "onUpdated" is called after a successful save; "onCancel" closes the form.
-function EditExperienceForm({ experience, onUpdated, onCancel }) {
+function EditExperienceForm({ experience, onUpdated, onCancel, onImagesChanged }) {
   const [formData, setFormData] = useState(experienceToFormData(experience))
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -165,6 +166,8 @@ function EditExperienceForm({ experience, onUpdated, onCancel }) {
           className={inputClasses}
         />
       </div>
+
+      <ExperienceImagesPanel experience={experience} onChanged={onImagesChanged} />
 
       {errorMessage && (
         <p role="alert" className="text-sm font-medium text-red-600">

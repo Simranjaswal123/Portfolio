@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getExperience } from '../services/experience.service.js'
+import ImageGallery from './ImageGallery.jsx'
 
 // Turns a database date like "2025-06-01" into "Jun 2025".
 // Anything else (for example the text "2025") is shown as it is.
@@ -75,6 +76,13 @@ function Experience() {
               </p>
 
               <p className="mt-3 text-gray-600">{item.description}</p>
+
+              {/* Photographs from this entry, if any. Below the text, so the description leads. */}
+              {item.images?.length > 0 && (
+                <div className="mt-4">
+                  <ImageGallery images={item.images} label={`Photographs from ${item.role} at ${item.company}`} />
+                </div>
+              )}
             </div>
           </li>
         ))}

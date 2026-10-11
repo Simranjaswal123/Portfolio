@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { signOut } from '../../services/auth.service.js'
+import ProfileImageSection from '../../components/admin/ProfileImageSection.jsx'
 import ProjectForm from '../../components/admin/ProjectForm.jsx'
 import ProjectsSection from '../../components/admin/ProjectsSection.jsx'
 import SkillForm from '../../components/admin/SkillForm.jsx'
@@ -63,14 +64,24 @@ function AdminDashboard() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
 
-        <button
-          type="button"
-          onClick={handleSignOut}
-          disabled={signingOut}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {signingOut ? 'Signing Out...' : 'Sign Out'}
-        </button>
+        <div className="flex flex-wrap gap-3">
+          {/* Leaves the dashboard but stays signed in, so you can come back. */}
+          <Link
+            to="/"
+            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none"
+          >
+            <span aria-hidden="true">←</span> Go to home page
+          </Link>
+
+          <button
+            type="button"
+            onClick={handleSignOut}
+            disabled={signingOut}
+            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {signingOut ? 'Signing Out...' : 'Sign Out'}
+          </button>
+        </div>
       </div>
 
       {errorMessage && (
@@ -78,6 +89,8 @@ function AdminDashboard() {
           {errorMessage}
         </p>
       )}
+
+      <ProfileImageSection />
 
       <ProjectForm onProjectCreated={handleProjectCreated} />
       <ProjectsSection refreshKey={projectsRefreshKey} />

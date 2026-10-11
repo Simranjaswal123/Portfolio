@@ -173,6 +173,7 @@ function ExperienceSection({ refreshKey }) {
             key={editingExperience.id}
             experience={editingExperience}
             onUpdated={handleUpdated}
+            onImagesChanged={loadExperience}
             onCancel={() => setEditingExperience(null)}
           />
         </div>

@@ -5,6 +5,7 @@ function About() {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [photoFailed, setPhotoFailed] = useState(false)
 
   // Runs once, when the component first appears on the page.
   useEffect(() => {
@@ -36,6 +37,10 @@ function About() {
     content = <p className="whitespace-pre-line">{profile.bio}</p>
   }
 
+  // The photo is cropped to a fixed frame (never stretched). If it is not set, or
+  // it fails to load, it is simply left out and the text takes the full width.
+  const photoUrl = !loading && !error && !photoFailed ? profile.profile_image_url : null
+
   return (
     <section id="about" className="bg-gray-50">
       <div className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
@@ -43,8 +48,18 @@ function About() {
           About Me
         </h2>
 
-        <div className="mx-auto mt-6 max-w-3xl space-y-4 text-lg text-gray-600 sm:mx-0">
-          {content}
+        <div className="mt-6 flex flex-col items-center gap-8 sm:flex-row sm:items-start">
+          {photoUrl && (
+            <img
+              src={photoUrl}
+              alt={`Photo of ${profile.name}`}
+              loading="lazy"
+              decoding="async"
+              onError={() => setPhotoFailed(true)}
+              className="aspect-[4/5] w-44 shrink-0 rounded-lg border border-gray-200 bg-gray-100 object-cover shadow-sm sm:w-52"
+            />
+          )}
+          <div className="max-w-3xl space-y-4 text-lg text-gray-600">{content}</div>
         </div>
       </div>
     </section>
