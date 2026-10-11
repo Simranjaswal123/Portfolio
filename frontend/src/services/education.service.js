@@ -1,9 +1,10 @@
 import { authenticatedFetch } from './api.js'
+import { API_URL } from '../config/api.js'
 
 // This service fetches education data from the backend API.
 // Returns the parsed JSON (an array of education entries), or throws if the request fails.
 export async function getEducation() {
-  const response = await fetch('http://localhost:5000/api/education')
+  const response = await fetch(`${API_URL}/api/education`)
 
   if (!response.ok) {
     throw new Error(`Failed to fetch education (status ${response.status})`)
@@ -15,7 +16,7 @@ export async function getEducation() {
 // Create a new education record through the backend API.
 // Returns the created record, or throws if the request fails.
 export async function createEducation(educationData) {
-  const response = await authenticatedFetch('http://localhost:5000/api/education', {
+  const response = await authenticatedFetch(`${API_URL}/api/education`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(educationData),
@@ -31,7 +32,7 @@ export async function createEducation(educationData) {
 // Update an existing education record through the backend API.
 // Returns the updated record, or throws if the request fails.
 export async function updateEducation(id, educationData) {
-  const response = await authenticatedFetch(`http://localhost:5000/api/education/${id}`, {
+  const response = await authenticatedFetch(`${API_URL}/api/education/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(educationData),
@@ -47,7 +48,7 @@ export async function updateEducation(id, educationData) {
 // Delete an education record through the backend API.
 // Returns the deleted record, or throws if the request fails.
 export async function deleteEducation(id) {
-  const response = await authenticatedFetch(`http://localhost:5000/api/education/${id}`, {
+  const response = await authenticatedFetch(`${API_URL}/api/education/${id}`, {
     method: 'DELETE',
   })
 
