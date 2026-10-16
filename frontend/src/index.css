@@ -214,25 +214,6 @@ section[id] {
     }
   }
 
-  /* Project carousels: slides glide sideways and fade; the frame lifts a little on hover. */
-  .carousel-track {
-    transition: transform var(--slide-ms, 450ms) cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .carousel-slide {
-    transition: opacity var(--slide-ms, 450ms) ease;
-  }
-  .carousel-glass {
-    transition:
-      translate 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.3s ease,
-      border-color 0.3s ease;
-  }
-  @media (hover: hover) {
-    .carousel-frame:hover .carousel-glass {
-      translate: 0 -4px;
-    }
-  }
-
   /* The screenshot gallery eases in. */
   .gallery-in[open] {
     animation: gallery-in 0.25s ease-out;
