@@ -5,7 +5,7 @@
 A modern, interactive portfolio built with React, Motion and Tailwind CSS. Each section has its own visual identity, from words that light up as you read to a draggable 3D stack of project screenshots, in a dark editorial design that also comes in a light theme. All content comes from a Supabase database through an Express API and is managed from a private admin dashboard.
 
 **🌐 Live demo:** [portfolio-simran-0106.vercel.app](https://portfolio-simran-0106.vercel.app)
-**📦 Repository:** [github.com/Simranjaswal123/Portfolio](https://github.com/Simranjaswal123/Portfolio)
+
 
 ---
 
