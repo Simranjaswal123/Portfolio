@@ -136,6 +136,24 @@
   transform: translateZ(-28px);
 }
 
+/* About: words light up as the visitor scrolls. --p (0..1, set from JS) is how far the
+   reveal has got, --i (0..1) is each word's place in reading order, and --s how many
+   words are mid-fade at once. A word goes from a dimmed grey (still easy to read) to
+   its paragraph's normal colour: off-white for the lead, the softer grey for the rest.
+   Only rendered when motion is allowed. */
+.scroll-reveal .scroll-paragraph {
+  --dim: color-mix(in oklab, var(--color-ash) 80%, var(--color-night));
+  --lit: color-mix(in oklab, var(--color-bone) 70%, var(--color-night));
+}
+.scroll-reveal .scroll-lead {
+  --lit: var(--color-bone);
+}
+.scroll-reveal .scroll-word {
+  --w: clamp(0, calc((var(--p, 1) * (1 + var(--s, 0.08)) - var(--i, 0)) / var(--s, 0.08)), 1);
+  color: color-mix(in oklab, var(--lit) calc(var(--w) * 100%), var(--dim));
+  transition: color 0.2s linear; /* smooths over coarse mouse-wheel steps */
+}
+
 /* Links to #projects, #contact... stop below the fixed navbar. */
 section[id] {
   scroll-margin-top: 4.5rem;
