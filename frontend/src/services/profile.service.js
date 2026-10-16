@@ -2,9 +2,25 @@ import { authenticatedFetch } from './api.js'
 import { authenticatedUpload } from './upload.js'
 import { API_URL } from '../config/api.js'
 
+// The request currently on its way, if any. The hero, About, Contact and the footer
+// all ask for the profile as the page opens; they share this one request instead of
+// sending four. It is forgotten as soon as it finishes, so a later call (for example
+// after the admin changes the photo) always fetches fresh data.
+let pendingProfile = null
+
 // This service fetches the profile from the backend API.
 // Returns the parsed JSON (one profile object), or throws if the request fails.
-export async function getProfile() {
+export function getProfile() {
+  if (!pendingProfile) {
+    pendingProfile = fetchProfile().finally(() => {
+      pendingProfile = null
+    })
+  }
+
+  return pendingProfile
+}
+
+async function fetchProfile() {
   const response = await fetch(`${API_URL}/api/profile`)
 
   if (!response.ok) {

@@ -120,7 +120,7 @@ function Dossier({ item, number, total, direction, panelId, tabId }) {
 
       <div
         ref={sheetRef}
-        className="dossier-sheet relative overflow-hidden rounded-sm border border-white/10 bg-[linear-gradient(160deg,#18181e,#111116_45%,#0e0e12)] shadow-[inset_0_1px_0_rgb(255_255_255/0.08),0_50px_80px_-50px_rgb(0_0_0/0.95)] transition-[border-color] duration-300 group-hover/dossier:border-white/[0.16]"
+        className="dossier-sheet relative overflow-hidden rounded-sm border border-white/10 bg-[linear-gradient(160deg,var(--sheet-a),var(--sheet-b)_45%,var(--sheet-c))] shadow-[inset_0_1px_0_rgb(255_255_255/0.08),0_50px_80px_-50px_rgb(var(--shade)/0.95)] transition-[border-color] duration-300 group-hover/dossier:border-white/[0.16]"
       >
         {/* The highlight that follows the pointer */}
         <div

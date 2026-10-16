@@ -12,10 +12,12 @@ import AdminLogin from './pages/admin/AdminLogin.jsx'
 import AdminDashboard from './pages/admin/AdminDashboard.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 
-// The public portfolio: the same components, in the same order, as before.
+// The public portfolio: the same components, in the same order, as before. The .site
+// wrapper carries the colour theme (light or dark; see index.css), so the admin pages
+// keep their own look.
 function PublicPortfolio() {
   return (
-    <>
+    <div className="site min-h-screen bg-night text-bone">
       <Navbar />
       <Hero />
       <About />
@@ -25,7 +27,7 @@ function PublicPortfolio() {
       <Education />
       <Contact />
       <Footer />
-    </>
+    </div>
   )
 }
 

@@ -192,7 +192,7 @@ function ProjectGallery({ title, images, startIndex = 0, kicker = 'Project image
                   alt={alt}
                   decoding="async"
                   onError={() => setFailed((set) => new Set(set).add(current.id))}
-                  className={`block rounded-xl border border-white/10 bg-night-2 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9)] ${
+                  className={`block rounded-xl border border-white/10 bg-night-2 shadow-[0_30px_80px_-30px_rgb(var(--shade)/0.9)] ${
                     zoomed ? 'h-auto w-full' : 'max-h-[calc(100svh-15rem)] max-w-full object-contain sm:max-h-[calc(100svh-14rem)]'
                   }`}
                 />

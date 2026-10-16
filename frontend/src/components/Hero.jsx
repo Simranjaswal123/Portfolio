@@ -117,7 +117,7 @@ function Hero() {
     <section ref={sectionRef} id="top" aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-night text-bone">
       {/* Tonal variation: a faint violet lift at the upper right, a lighter charcoal at the lower left, and film grain. */}
       <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_80%_28%,rgb(111_93_242/0.17),transparent_70%),radial-gradient(55%_50%_at_6%_100%,#1a1a21,transparent_72%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_80%_28%,rgb(111_93_242/0.17),transparent_70%),radial-gradient(55%_50%_at_6%_100%,var(--hero-tone),transparent_72%)]" />
         <div className="grain absolute inset-0" />
       </div>
 

@@ -15,6 +15,83 @@
   --color-iris-deep: #6f5df2; /* violet for fills */
 }
 
+/* ---------- Themes ----------
+   The public site lives inside <div class="site">. Its colours come from the tokens
+   above, and the light theme swaps them here, so every section changes together.
+   (The admin pages sit outside .site and keep their own look.)
+
+     night / night-2   page backgrounds         bone   main text
+     ash               quieter text             iris   violet accent
+     white             borders and glass tints (ink on the light theme)
+     --shade           shadow colour (rgb)      --stage  experience spotlight (rgb)
+     --night-rgb       page colour for fades     --sheet-*  education dossier paper
+     --hero-tone       the hero's lower-left tonal lift */
+.site {
+  --shade: 0 0 0;
+  --stage: 236 233 226;
+  --night-rgb: 11 11 14;
+  --sheet-a: #18181e;
+  --sheet-b: #111116;
+  --sheet-c: #0e0e12;
+  --hero-tone: #1a1a21;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] .site {
+  --color-night: #f3f1ec; /* warm paper */
+  --color-night-2: #e8e5dd;
+  --color-bone: #16151b; /* ink (16:1 on paper) */
+  --color-ash: #5f5d68; /* muted ink (5.9:1 on paper) */
+  --color-iris: #5a44de; /* deeper violet so it stays readable on paper (5.6:1) */
+  --color-iris-deep: #6f5df2;
+  --color-white: #16151b; /* "white/10" borders and glass become ink tints */
+  --shade: 112 100 140; /* softer, lilac-grey shadows */
+  --stage: 111 93 242; /* a faint violet pool instead of a light one */
+  --night-rgb: 243 241 236;
+  --sheet-a: #fbfaf7;
+  --sheet-b: #f6f4ef;
+  --sheet-c: #f0ede6;
+  --hero-tone: #e6e2d9;
+  color-scheme: light;
+}
+
+/* Logos recoloured white for the dark theme go back to dark on paper. (Matched by
+   name: Vite inlines small SVGs as data: URLs, so their src doesn't contain it.) */
+:root[data-theme='light'] .site img[data-logo='github'],
+:root[data-theme='light'] .site img[data-logo='express'] {
+  filter: invert(1);
+}
+
+/* Switching theme: the new theme spreads out from the toggle in a circle
+   (the circle itself is animated from JS; see ThemeToggle.jsx). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* The toggle's icon: a moon in the dark theme; in the light theme the moon's
+   shadow slides away, the disc shrinks into a sun and the rays turn in. */
+.theme-toggle .toggle-core {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.theme-toggle .toggle-rays {
+  transform-origin: 12px 12px;
+  opacity: 0;
+  transform: rotate(-60deg) scale(0.4);
+}
+:root[data-theme='light'] .theme-toggle .toggle-core {
+  transform: scale(0.55);
+}
+:root[data-theme='light'] .theme-toggle .toggle-bite {
+  transform: translate(9px, -9px);
+}
+:root[data-theme='light'] .theme-toggle .toggle-rays {
+  opacity: 1;
+  transform: none;
+}
+
 /* A very fine film grain that keeps large dark areas from looking flat. */
 @utility grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -216,6 +293,14 @@ section[id] {
     transition:
       translate 0.45s cubic-bezier(0.16, 1, 0.3, 1),
       background-color 0.3s ease;
+  }
+
+  .theme-toggle .toggle-core,
+  .theme-toggle .toggle-bite,
+  .theme-toggle .toggle-rays {
+    transition:
+      transform 0.6s cubic-bezier(0.34, 1.4, 0.64, 1),
+      opacity 0.35s ease;
   }
 
   /* The portrait eases towards the pointer (set from JS). */

@@ -79,7 +79,7 @@ function iconFor(skill) {
   const logo = logos[aliases[key] ?? key]
 
   if (logo) {
-    return { type: 'image', src: logo }
+    return { type: 'image', src: logo, name: aliases[key] ?? key }
   }
 
   if (sparkleSkills.includes(key)) {
@@ -123,7 +123,7 @@ function SkillTile({ skill }) {
 
   const mark =
     icon.type === 'image' ? (
-      <img src={icon.src} alt="" decoding="async" onError={() => setImageFailed(true)} className="h-full w-full object-contain" />
+      <img src={icon.src} data-logo={icon.name} alt="" decoding="async" onError={() => setImageFailed(true)} className="h-full w-full object-contain" />
     ) : icon.type === 'sparkle' ? (
       <Sparkle />
     ) : (
@@ -141,10 +141,10 @@ function SkillTile({ skill }) {
     >
       <div
         ref={cardRef}
-        className="skill-card relative flex h-36 flex-col items-center justify-center gap-4 rounded-[1.25rem] border border-white/10 shadow-[inset_0_1px_0_rgb(255_255_255/0.13),0_16px_36px_-22px_rgb(0_0_0/0.9)] transition-[box-shadow,border-color] duration-300 [transform-style:preserve-3d] group-hover:border-iris/35 group-hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.18),inset_1px_0_0_rgb(168_153_255/0.22),0_34px_55px_-22px_rgb(0_0_0/0.95)] sm:h-40"
+        className="skill-card relative flex h-36 flex-col items-center justify-center gap-4 rounded-[1.25rem] border border-white/10 shadow-[inset_0_1px_0_rgb(255_255_255/0.13),0_16px_36px_-22px_rgb(var(--shade)/0.9)] transition-[box-shadow,border-color] duration-300 [transform-style:preserve-3d] group-hover:border-iris/35 group-hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.18),inset_1px_0_0_rgb(168_153_255/0.22),0_34px_55px_-22px_rgb(var(--shade)/0.95)] sm:h-40"
       >
         {/* The glass: smoked charcoal with a blur of whatever sits behind it */}
-        <div aria-hidden="true" className="absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/[0.07] via-white/[0.025] to-black/20 backdrop-blur-md" />
+        <div aria-hidden="true" className="absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/[0.07] via-white/[0.025] to-night/20 backdrop-blur-md" />
         {/* A faint fixed sheen across the top-left, as light on a pane */}
         <div aria-hidden="true" className="absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,rgb(255_255_255/0.07),transparent_38%)]" />
         {/* The reflection that follows the pointer (hover devices only) */}
@@ -161,7 +161,7 @@ function SkillTile({ skill }) {
           >
             {mark}
           </div>
-          <div className="relative h-full w-full [filter:drop-shadow(0_-1px_0_rgb(255_255_255/0.2))_drop-shadow(0_8px_9px_rgb(0_0_0/0.5))]">{mark}</div>
+          <div className="relative h-full w-full [filter:drop-shadow(0_-1px_0_rgb(255_255_255/0.2))_drop-shadow(0_8px_9px_rgb(var(--shade)/0.5))]">{mark}</div>
         </div>
 
         <span className="relative font-ui text-sm font-medium text-bone/85 [transform:translateZ(12px)]">{skill.name}</span>

@@ -87,7 +87,7 @@ function ProjectCarousel({ title, slides, onEnlarge }) {
       <div aria-hidden="true" className="absolute inset-x-[12%] -bottom-6 top-6 -z-20 rounded-[1.6rem] border border-white/[0.04] bg-white/[0.015]" />
 
       {/* The glass frame */}
-      <div className="carousel-glass relative rounded-[1.6rem] border border-white/10 bg-white/[0.045] p-2 shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_40px_70px_-36px_rgb(0_0_0/0.95)] backdrop-blur-xl transition-[box-shadow,border-color] duration-300 group-hover:border-white/[0.16] sm:p-2.5">
+      <div className="carousel-glass relative rounded-[1.6rem] border border-white/10 bg-white/[0.045] p-2 shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_40px_70px_-36px_rgb(var(--shade)/0.95)] backdrop-blur-xl transition-[box-shadow,border-color] duration-300 group-hover:border-white/[0.16] sm:p-2.5">
         {/* A soft reflection across the top of the glass */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(160deg,rgb(255_255_255/0.07),transparent_30%)]" />
 

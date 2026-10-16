@@ -6,6 +6,16 @@
     <title>Portfolio</title>
     <meta name="theme-color" content="#0b0b0e" />
 
+    <!-- Apply the saved light/dark choice before anything paints (no flash of the wrong theme). -->
+    <script>
+      try {
+        if (localStorage.getItem('portfolio-theme') === 'light') {
+          document.documentElement.dataset.theme = 'light'
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f3f1ec')
+        }
+      } catch (e) {}
+    </script>
+
     <!-- Fonts for the navbar and hero: an expressive grotesque for headings, a clean UI sans and a mono for labels. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

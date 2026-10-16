@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import ThemeToggle from './ThemeToggle.jsx'
 
 // Each link points to a section on the same page via its id (e.g. #about).
 const links = [
@@ -133,23 +134,27 @@ function Navbar() {
           >
             Admin
           </Link>
+          <ThemeToggle className="ml-6" />
         </div>
 
-        {/* Small screens */}
-        <button
-          ref={menuButtonRef}
-          type="button"
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen((isOpen) => !isOpen)}
-          className={`flex items-center gap-3 py-2 font-label text-xs tracking-[0.14em] text-bone uppercase lg:hidden ${focusRing}`}
-        >
-          {open ? 'Close' : 'Menu'}
-          <span aria-hidden="true" className="flex w-5 flex-col items-end gap-[5px]">
-            <span className={`block h-px bg-current transition-all duration-300 ${open ? 'w-5 translate-y-[3px] rotate-45' : 'w-5'}`} />
-            <span className={`block h-px bg-current transition-all duration-300 ${open ? 'w-5 -translate-y-[3px] -rotate-45' : 'w-3'}`} />
-          </span>
-        </button>
+        {/* Small screens: the theme switch and the Menu button */}
+        <div className="flex items-center gap-4 lg:hidden">
+          <ThemeToggle />
+          <button
+            ref={menuButtonRef}
+            type="button"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((isOpen) => !isOpen)}
+            className={`flex items-center gap-3 py-2 font-label text-xs tracking-[0.14em] text-bone uppercase ${focusRing}`}
+          >
+            {open ? 'Close' : 'Menu'}
+            <span aria-hidden="true" className="flex w-5 flex-col items-end gap-[5px]">
+              <span className={`block h-px bg-current transition-all duration-300 ${open ? 'w-5 translate-y-[3px] rotate-45' : 'w-5'}`} />
+              <span className={`block h-px bg-current transition-all duration-300 ${open ? 'w-5 -translate-y-[3px] -rotate-45' : 'w-3'}`} />
+            </span>
+          </button>
+        </div>
       </nav>
 
       {/* The menu panel is only on the page while open, so a closed menu can never be tabbed into. */}

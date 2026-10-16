@@ -58,7 +58,7 @@ function Photographs({ item, photos, onOpen, fallback = null }) {
           type="button"
           onClick={(event) => onOpen(photos.indexOf(lead), event.currentTarget)}
           aria-haspopup="dialog"
-          className={`spotlight-photo group/photo relative block aspect-[3/2] w-full cursor-zoom-in overflow-hidden rounded-md bg-night-2 shadow-[0_40px_70px_-40px_rgb(0_0_0/0.95)] ${focusRing}`}
+          className={`spotlight-photo group/photo relative block aspect-[3/2] w-full cursor-zoom-in overflow-hidden rounded-md bg-night-2 shadow-[0_40px_70px_-40px_rgb(var(--shade)/0.95)] ${focusRing}`}
         >
           <img
             src={lead.image_url}
@@ -69,7 +69,7 @@ function Photographs({ item, photos, onOpen, fallback = null }) {
             className="h-full w-full object-cover brightness-[0.88] saturate-[0.82] transition-[filter,scale] duration-500 group-hover/photo:brightness-100 group-hover/photo:saturate-100 motion-safe:group-hover/photo:scale-[1.03]"
           />
           {/* A soft vignette that settles the photo into the dark page */}
-          <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgb(11_11_14/0.55))]" />
+          <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgb(var(--night-rgb)/0.55))]" />
           <span className="sr-only"> (view larger)</span>
         </button>
       </figure>
@@ -161,8 +161,8 @@ function Chapter({ item, index }) {
         aria-hidden="true"
         className={`absolute inset-0 -z-10 ${
           flip
-            ? 'bg-[radial-gradient(42%_70%_at_74%_0%,rgb(236_233_226/0.055),transparent_70%)]'
-            : 'bg-[radial-gradient(42%_70%_at_26%_0%,rgb(236_233_226/0.055),transparent_70%)]'
+            ? 'bg-[radial-gradient(42%_70%_at_74%_0%,rgb(var(--stage)/0.055),transparent_70%)]'
+            : 'bg-[radial-gradient(42%_70%_at_26%_0%,rgb(var(--stage)/0.055),transparent_70%)]'
         }`}
       />
       {/* The chapter number, huge and quiet, drifting slightly as the page scrolls */}
