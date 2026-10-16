@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { getExperience } from '../services/experience.service.js'
+import ProjectCarousel from './ProjectCarousel.jsx'
 import ProjectGallery from './ProjectGallery.jsx'
 import Reveal from './Reveal.jsx'
 
@@ -33,78 +34,6 @@ function toParagraphs(text) {
 // Most recent first. Entries without a start date go last.
 function sortExperience(items) {
   return [...items].sort((a, b) => String(b.start_date ?? '').localeCompare(String(a.start_date ?? '')))
-}
-
-// The visual side of a chapter when the entry has photographs: one large photo in a
-// thin offset frame, the rest as a small row beneath. Any of them opens the viewer.
-// If none of them load, `fallback` is shown instead.
-function Photographs({ item, photos, onOpen, fallback = null }) {
-  const [failed, setFailed] = useState(() => new Set())
-  const shown = photos.filter((photo) => !failed.has(photo.id))
-
-  if (shown.length === 0) {
-    return fallback
-  }
-
-  const [lead, ...rest] = shown
-  const markFailed = (id) => setFailed((set) => new Set(set).add(id))
-
-  return (
-    <div>
-      <figure className="relative">
-        {/* The frame: a hairline offset behind the photo */}
-        <div aria-hidden="true" className="absolute inset-0 translate-x-3 translate-y-3 rounded-md border border-iris/25 sm:translate-x-4 sm:translate-y-4" />
-        <button
-          type="button"
-          onClick={(event) => onOpen(photos.indexOf(lead), event.currentTarget)}
-          aria-haspopup="dialog"
-          className={`spotlight-photo group/photo relative block aspect-[3/2] w-full cursor-zoom-in overflow-hidden rounded-md bg-night-2 shadow-[0_40px_70px_-40px_rgb(var(--shade)/0.95)] ${focusRing}`}
-        >
-          <img
-            src={lead.image_url}
-            alt={lead.alt}
-            loading="lazy"
-            decoding="async"
-            onError={() => markFailed(lead.id)}
-            className="h-full w-full object-cover brightness-[0.88] saturate-[0.82] transition-[filter,scale] duration-500 group-hover/photo:brightness-100 group-hover/photo:saturate-100 motion-safe:group-hover/photo:scale-[1.03]"
-          />
-          {/* A soft vignette that settles the photo into the dark page */}
-          <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgb(var(--night-rgb)/0.55))]" />
-          <span className="sr-only"> (view larger)</span>
-        </button>
-      </figure>
-
-      {rest.length > 0 && (
-        <ul aria-label={`More photographs from ${item.role} at ${item.company}`} className="mt-8 grid grid-cols-3 gap-3 sm:mt-9">
-          {rest.slice(0, 3).map((photo) => (
-            <li key={photo.id}>
-              <button
-                type="button"
-                onClick={(event) => onOpen(photos.indexOf(photo), event.currentTarget)}
-                aria-haspopup="dialog"
-                className={`group/thumb block aspect-[3/2] w-full cursor-zoom-in overflow-hidden rounded-sm border border-white/10 bg-night-2 transition-colors duration-300 hover:border-iris/50 ${focusRing}`}
-              >
-                <img
-                  src={photo.image_url}
-                  alt={photo.alt}
-                  loading="lazy"
-                  decoding="async"
-                  onError={() => markFailed(photo.id)}
-                  className="h-full w-full object-cover brightness-75 saturate-[0.8] transition-[filter] duration-300 group-hover/thumb:brightness-100 group-hover/thumb:saturate-100"
-                />
-                <span className="sr-only"> (view larger)</span>
-              </button>
-            </li>
-          ))}
-          {rest.length > 3 && (
-            <li className="col-span-3 font-label text-[0.68rem] tracking-[0.14em] text-ash uppercase">
-              +{rest.length - 3} more in the viewer
-            </li>
-          )}
-        </ul>
-      )}
-    </div>
-  )
 }
 
 // The visual side when there are no photographs: the dates themselves, set large.
@@ -225,7 +154,13 @@ function Chapter({ item, index }) {
         {/* ---- Photographs, or the dates set large ---- */}
         {hasVisual && (
           <Reveal delay={120} className={`min-w-0 lg:col-span-5 ${flip ? 'lg:order-1' : ''}`}>
-            {photos.length > 0 ? <Photographs item={item} photos={photos} onOpen={openViewer} fallback={<DateComposition item={item} />} /> : <DateComposition item={item} />}
+            {photos.length > 0 ? (
+              // The photographs as a draggable stack (the same carousel the projects use);
+              // photos are 3:2, so the cards are too and nothing is cropped.
+              <ProjectCarousel title={`${item.role}${item.company ? ` at ${item.company}` : ''}`} slides={photos} aspect={1.5} onEnlarge={openViewer} />
+            ) : (
+              <DateComposition item={item} />
+            )}
           </Reveal>
         )}
       </div>

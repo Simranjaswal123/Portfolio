@@ -77,8 +77,8 @@ function StackCard({ slide, index, count, pos, gap, flat, active, onActivate, on
         aria-haspopup={active ? 'dialog' : undefined}
         aria-label={active ? `${slide.alt} (view larger)` : `Show image ${index + 1} of ${count}`}
         aria-current={active ? 'true' : undefined}
-        style={{ x, y, scale, rotateY, opacity, zIndex, pointerEvents, transformPerspective: 1100, width: 'var(--card-w)' }}
-        className={`stack-card group relative aspect-[2.2/1] overflow-hidden rounded-xl border bg-night-2 text-left select-none ${
+        style={{ x, y, scale, rotateY, opacity, zIndex, pointerEvents, transformPerspective: 1100, width: 'var(--card-w)', aspectRatio: 'var(--card-aspect)' }}
+        className={`stack-card group relative overflow-hidden rounded-xl border bg-night-2 text-left select-none ${
           active ? 'cursor-zoom-in border-white/15 hover:border-iris/50' : 'cursor-pointer border-white/10'
         } shadow-[0_30px_60px_-30px_rgb(var(--shade)/0.95)] ${focusRing}`}
       >
@@ -121,12 +121,16 @@ function StackCard({ slide, index, count, pos, gap, flat, active, onActivate, on
 //   title      the project's name (for labels)
 //   slides     [{ id, image_url, alt }], already in order (may be empty)
 //   onEnlarge  (index, openerElement) => open the large viewer at that slide
-function ProjectCarousel({ title, slides, onEnlarge }) {
+//   aspect     the cards' width / height: 2.2 for website screenshots (the default),
+//              1.5 for ordinary photographs. Set it to the images' shape so none are cropped.
+function ProjectCarousel({ title, slides, onEnlarge, aspect = 2.2 }) {
   const count = slides.length
   const reduced = useReducedMotion()
   const small = useIsSmall()
   const gap = small ? 26 : 34 // distance between neighbouring card centres, in % of a card's width
   const cardWidth = small ? 88 : 74 // the front card's width, in % of the carousel
+  // The stage is as tall as a card plus room for the tilted neighbours above and below.
+  const stageAspect = 1 / (cardWidth / 100 / aspect + (small ? 0.1 : 0.125))
 
   const [active, setActive] = useState(0)
   const [failed, setFailed] = useState(() => new Set())
@@ -203,7 +207,7 @@ function ProjectCarousel({ title, slides, onEnlarge }) {
 
   if (count === 0) {
     return (
-      <div aria-hidden="true" className="flex aspect-[2.2/1] w-full items-center justify-center rounded-2xl border border-white/10 bg-[radial-gradient(60%_80%_at_30%_20%,rgb(111_93_242/0.14),transparent_70%)] font-display text-[clamp(4rem,12vw,8rem)] leading-none font-extrabold text-bone/10">
+      <div aria-hidden="true" style={{ aspectRatio: aspect }} className="flex w-full items-center justify-center rounded-2xl border border-white/10 bg-[radial-gradient(60%_80%_at_30%_20%,rgb(111_93_242/0.14),transparent_70%)] font-display text-[clamp(4rem,12vw,8rem)] leading-none font-extrabold text-bone/10">
         {title.trim().slice(0, 2).toUpperCase()}
       </div>
     )
@@ -218,8 +222,8 @@ function ProjectCarousel({ title, slides, onEnlarge }) {
         onPanStart={several ? handlePanStart : undefined}
         onPan={several ? handlePan : undefined}
         onPanEnd={several ? handlePanEnd : undefined}
-        style={{ '--card-w': `${cardWidth}%`, touchAction: 'pan-y' }}
-        className={`relative isolate aspect-[16/8] w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_5%,#000_95%,transparent)] sm:aspect-[16/7.5] ${several ? 'cursor-grab active:cursor-grabbing' : ''}`}
+        style={{ '--card-w': `${cardWidth}%`, '--card-aspect': aspect, aspectRatio: stageAspect, touchAction: 'pan-y' }}
+        className={`relative isolate w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_5%,#000_95%,transparent)] ${several ? 'cursor-grab active:cursor-grabbing' : ''}`}
       >
         {slides.map((slide, index) => (
           <StackCard
