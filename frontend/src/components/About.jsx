@@ -54,9 +54,9 @@ function splitWords(paragraphs) {
 // --p (0 = nothing lit, 1 = everything lit), onto the container; CSS turns it into each
 // word's colour. No React state changes while scrolling, and the scroll listener only
 // exists while the text is near the screen.
-//   desktop/tablet  starts as the text comes up from the bottom (85% down the screen) and
-//                   finishes when its end passes the middle; words light one by one
-//   phones          starts earlier, finishes sooner, and lights words in softer, wider
+//   desktop/tablet  starts as soon as the text appears at the bottom of the screen and
+//                   finishes when its end reaches the upper third; words light one by one
+//   phones          finishes sooner (its end two-thirds up the screen) and lights words in softer, wider
 //                   groups, so there is little extra scrolling
 function useScrollReveal(ref, enabled) {
   useEffect(() => {
@@ -74,12 +74,12 @@ function useScrollReveal(ref, enabled) {
       const box = element.getBoundingClientRect()
       const viewport = window.innerHeight
       const small = window.innerWidth < 768
-      const start = viewport * (small ? 0.95 : 0.85) // where the text's top is when the reveal begins
-      const end = viewport * (small ? 0.8 : 0.5) // where its bottom is when the reveal ends
+      const start = viewport // the reveal begins as soon as the text's top enters the screen
+      const end = viewport * (small ? 0.65 : 0.3) // where its bottom is when the reveal ends
       const progress = (start - box.top) / (start - end + box.height)
 
       element.style.setProperty('--p', Math.min(1, Math.max(0, progress)).toFixed(4))
-      element.style.setProperty('--s', small ? '0.3' : '0.08') // how many words fade at once
+      element.style.setProperty('--s', small ? '0.35' : '0.14') // how many words fade at once
     }
 
     function onScroll() {
