@@ -142,20 +142,24 @@
    its paragraph's normal colour: off-white for the lead, the softer grey for the rest.
    Only rendered when motion is allowed. */
 .scroll-reveal .scroll-paragraph {
-  /* unlit: a clearly muted grey (about 3:1 against the page, so still readable) */
-  --dim: color-mix(in oklab, var(--color-ash) var(--dim-mix, 62%), var(--color-night));
-  /* fully lit: bright off-white (ink on the light theme), a touch softer for body text */
-  --lit: color-mix(in oklab, var(--color-bone) 90%, var(--color-night));
-}
-.scroll-reveal .scroll-lead {
+  /* unlit: a deep muted grey (about 2.5:1 on the page: dim, but still readable) */
+  --dim: color-mix(in oklab, var(--color-ash) var(--dim-mix, 50%), var(--color-night));
+  /* fully lit: the brightest off-white (ink on the light theme) */
   --lit: var(--color-bone);
 }
 :root[data-theme='light'] .scroll-reveal .scroll-paragraph {
-  --dim-mix: 68%; /* on paper the muted grey needs a little more weight to stay legible */
+  --dim-mix: 58%; /* on paper the muted grey needs a little more weight to stay legible */
 }
 .scroll-reveal .scroll-word {
+  /* --w: how lit this word is (0..1). --edge peaks at 1 for words half way through
+     lighting up: the reading edge, which briefly carries a soft violet tint. */
   --w: clamp(0, calc((var(--p, 1) * (1 + var(--s, 0.08)) - var(--i, 0)) / var(--s, 0.08)), 1);
-  color: color-mix(in oklab, var(--lit) calc(var(--w) * 100%), var(--dim));
+  --edge: min(var(--w), calc(1 - var(--w)));
+  color: color-mix(
+    in oklab,
+    var(--color-iris) calc(var(--edge) * 100%),
+    color-mix(in oklab, var(--lit) calc(var(--w) * 100%), var(--dim))
+  );
   transition: color 0.45s ease-out; /* smooths over coarse mouse-wheel steps */
 }
 

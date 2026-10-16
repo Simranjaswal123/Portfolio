@@ -79,7 +79,7 @@ function useScrollReveal(ref, enabled) {
       const progress = (start - box.top) / (start - end + box.height)
 
       element.style.setProperty('--p', Math.min(1, Math.max(0, progress)).toFixed(4))
-      element.style.setProperty('--s', small ? '0.35' : '0.14') // how many words fade at once
+      element.style.setProperty('--s', small ? '0.4' : '0.18') // how many words fade at once
     }
 
     function onScroll() {
