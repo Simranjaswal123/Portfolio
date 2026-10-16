@@ -142,11 +142,16 @@
    its paragraph's normal colour: off-white for the lead, the softer grey for the rest.
    Only rendered when motion is allowed. */
 .scroll-reveal .scroll-paragraph {
-  --dim: color-mix(in oklab, var(--color-ash) 80%, var(--color-night));
-  --lit: color-mix(in oklab, var(--color-bone) 70%, var(--color-night));
+  /* unlit: a clearly muted grey (about 3:1 against the page, so still readable) */
+  --dim: color-mix(in oklab, var(--color-ash) var(--dim-mix, 62%), var(--color-night));
+  /* fully lit: bright off-white (ink on the light theme), a touch softer for body text */
+  --lit: color-mix(in oklab, var(--color-bone) 90%, var(--color-night));
 }
 .scroll-reveal .scroll-lead {
   --lit: var(--color-bone);
+}
+:root[data-theme='light'] .scroll-reveal .scroll-paragraph {
+  --dim-mix: 68%; /* on paper the muted grey needs a little more weight to stay legible */
 }
 .scroll-reveal .scroll-word {
   --w: clamp(0, calc((var(--p, 1) * (1 + var(--s, 0.08)) - var(--i, 0)) / var(--s, 0.08)), 1);
